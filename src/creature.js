@@ -7,7 +7,13 @@ void main() { gl_Position = vec4(aPos, 0.0, 1.0); }
 `;
 
 const FRAG = `
+// mediump on phones is a 16-bit float: pixel coordinates and time lose so much precision that the
+// body breaks up into blocks. Use highp wherever the GPU supports it.
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
 precision mediump float;
+#endif
 uniform vec2 uCenter;   // body centre in device pixels (y from the bottom)
 uniform float uSize;    // body radius in device pixels
 uniform vec2 uSquash;   // x / y scale, anchored at the feet
@@ -140,12 +146,15 @@ export function createCreature(bodyCanvas, faceCanvas) {
   function resize() {
     const rect = faceCanvas.getBoundingClientRect();
     st.dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // The jelly body is soft anyway, so it renders at a lower resolution than the crisp face —
+    // far fewer pixels for the fragment shader on phones.
+    st.glDpr = Math.min(st.dpr, 1.5);
     st.w = rect.width;
     st.h = rect.height;
-    for (const c of [bodyCanvas, faceCanvas]) {
-      c.width = Math.round(st.w * st.dpr);
-      c.height = Math.round(st.h * st.dpr);
-    }
+    bodyCanvas.width = Math.round(st.w * st.glDpr);
+    bodyCanvas.height = Math.round(st.h * st.glDpr);
+    faceCanvas.width = Math.round(st.w * st.dpr);
+    faceCanvas.height = Math.round(st.h * st.dpr);
     st.size = Math.min(st.w * 0.3, st.h * 0.28);
     st.cx = st.w / 2;
     st.cy = st.h * st.lift;
@@ -303,11 +312,13 @@ export function createCreature(bodyCanvas, faceCanvas) {
     g.viewport(0, 0, bodyCanvas.width, bodyCanvas.height);
     g.clearColor(0, 0, 0, 0);
     g.clear(g.COLOR_BUFFER_BIT);
-    g.uniform2f(u.uCenter, st.cx * st.dpr, (st.h - st.cy) * st.dpr);
-    g.uniform1f(u.uSize, st.size * st.dpr);
+    g.uniform2f(u.uCenter, st.cx * st.glDpr, (st.h - st.cy) * st.glDpr);
+    g.uniform1f(u.uSize, st.size * st.glDpr);
     g.uniform2f(u.uSquash, sx, sy);
     g.uniform1f(u.uLean, st.lean);
-    g.uniform1f(u.uTime, t);
+    // Wrap time every 20π s: the shader uses sin(t·14) and sin(t·11), both whole periods over 20π,
+    // so there is no visible jump, and the value stays small enough for low-precision GPUs.
+    g.uniform1f(u.uTime, t % (Math.PI * 20));
     g.uniform1f(u.uWobble, st.wobble);
     g.uniform3f(u.uColor, st.color[0], st.color[1], st.color[2]);
     g.uniform1f(u.uPale, st.pale);

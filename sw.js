@@ -1,7 +1,7 @@
 // Service worker: the whole app works offline. Bump VERSION whenever files change.
 // The domain (thesigns.github.io) is shared with other apps, so only caches prefixed with CACHE_PREFIX are touched.
 const CACHE_PREFIX = 'derpiku-';
-const VERSION = CACHE_PREFIX + 'v13';
+const VERSION = CACHE_PREFIX + 'v14';
 const FILES = [
   './',
   'index.html',

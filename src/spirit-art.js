@@ -514,7 +514,7 @@
     }
   }
 
-  // Draws a spirit. spirit: { animal, color }; opts: { x, y, r (head radius in px), alpha, glow }.
+  // Draws a spirit. spirit: { animal, color }; opts: { x, y, r (head radius in px), alpha, glow (0–1, default 1) }.
   function draw(ctx, spirit, t, opts) {
     const spec = ANIMALS[spirit.animal] || {};
     const c = rgb(spec.bodyColor || spirit.color);
@@ -538,8 +538,17 @@
     body.addColorStop(0.7, css(c, 0.7));
     body.addColorStop(1, css(c, 0));
 
-    ctx.shadowColor = css(c, 0.9);
-    ctx.shadowBlur = opts.glow == null ? opts.r * 0.7 : opts.glow;
+    // Glow: a single soft radial halo behind the spirit. shadowBlur looked similar but is very slow
+    // on phones, where it made petting Derpiku stutter whenever a spirit was overhead.
+    const glow = opts.glow == null ? 1 : opts.glow;
+    if (glow > 0) {
+      const halo = ctx.createRadialGradient(0, 0.3, 0.4, 0, 0.3, 2.3);
+      halo.addColorStop(0, css(c, 0.42 * glow));
+      halo.addColorStop(0.5, css(c, 0.16 * glow));
+      halo.addColorStop(1, css(c, 0));
+      ctx.fillStyle = halo;
+      ctx.fillRect(-2.4, -2, 4.8, 4.6);
+    }
     if (spec.back) spec.back(ctx, P, t);
     if (spec.body === 'jelly') {
       jellyTentacles(ctx, t, P.part);
@@ -549,7 +558,6 @@
     }
     ctx.fillStyle = body;
     ctx.fill();
-    ctx.shadowBlur = 0;
 
     // highlight
     ellipse(ctx, -0.38, -0.55, 0.32, 0.15, -0.5, 'rgba(255,255,255,0.55)');
