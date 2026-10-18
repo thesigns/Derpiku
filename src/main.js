@@ -601,6 +601,8 @@ async function setupDevMode() {
 // ---------- start ----------
 
 async function init() {
+  const v = globalThis.DERPIKU_VERSION;
+  $('app-version').textContent = `${v.name} (build ${v.build})`;
   const saved = await load('state');
   if (saved && saved.version === 2) state = { ...DEFAULT_STATE, ...saved };
   else if (saved) state = { ...DEFAULT_STATE, walkDistanceM: saved.walkDistanceM || 500, onboarded: !!saved.onboarded };
@@ -632,7 +634,8 @@ async function init() {
   // No service worker on localhost (always fresh files), unless the URL has ?sw — for testing offline mode.
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     if (!IS_LOCALHOST || new URLSearchParams(location.search).has('sw')) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
+      // updateViaCache: 'none' — update checks fetch sw.js and src/version.js past the HTTP cache.
+      navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {});
     } else {
       navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.unregister())).catch(() => {});
     }

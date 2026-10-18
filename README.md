@@ -53,7 +53,7 @@ The orbit simulator opens directly from disk: `tools/orbit-sim/index.html`.
 
 GitHub Pages: **Settings → Pages → Source: Deploy from a branch**, branch `main`, folder `/ (root)`. Every push to `main` updates the site. `.nojekyll` makes Pages serve the files as they are.
 
-The service worker serves files from its cache, so **bump `VERSION` in `sw.js` whenever game files change** — otherwise installed copies keep the old version. The new version usually shows up on the second launch. (`src/dev.js` is not precached on purpose — it only runs on localhost.)
+The service worker serves files from its cache, so **bump `build` in `src/version.js` whenever game files change** — it names the cache and is shown in *Settings*; otherwise installed copies keep the old version. The new version usually shows up on the second launch. (`src/dev.js` is not precached on purpose — it only runs on localhost.)
 
 ## License
 

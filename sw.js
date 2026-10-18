@@ -1,7 +1,9 @@
-// Service worker: the whole app works offline. Bump VERSION whenever files change.
+// Service worker: the whole app works offline. The cache is named after the build in src/version.js —
+// bump it whenever files change.
+importScripts('src/version.js');
 // The domain (thesigns.github.io) is shared with other apps, so only caches prefixed with CACHE_PREFIX are touched.
 const CACHE_PREFIX = 'derpiku-';
-const VERSION = CACHE_PREFIX + 'v14';
+const VERSION = CACHE_PREFIX + 'b' + self.DERPIKU_VERSION.build;
 const FILES = [
   './',
   'index.html',
@@ -11,6 +13,7 @@ const FILES = [
   'icons/icon-512.png',
   'icons/maskable-512.png',
   'src/style.css',
+  'src/version.js',
   'src/orbits.js',
   'src/spirits.js',
   'src/main.js',
