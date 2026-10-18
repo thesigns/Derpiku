@@ -1,7 +1,7 @@
 // Service worker: the whole app works offline. Bump VERSION whenever files change.
 // The domain (thesigns.github.io) is shared with other apps, so only caches prefixed with CACHE_PREFIX are touched.
 const CACHE_PREFIX = 'derpiku-';
-const VERSION = CACHE_PREFIX + 'v12';
+const VERSION = CACHE_PREFIX + 'v13';
 const FILES = [
   './',
   'index.html',
@@ -26,7 +26,10 @@ const FILES = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting()));
+  // cache: 'reload' skips the browser's HTTP cache (GitHub Pages sends max-age=600), so a new VERSION
+  // never gets precached with stale files from the previous deploy.
+  const requests = FILES.map(f => new Request(f, { cache: 'reload' }));
+  event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(requests)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
