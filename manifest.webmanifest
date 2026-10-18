@@ -1,0 +1,19 @@
+{
+  "id": "/Derpiku/",
+  "name": "Derpiku",
+  "short_name": "Derpiku",
+  "description": "A derpy pocket pet that hears haiku from spirits orbiting the Earth. Pet it, take a walk, pet it again — and it tells you a haiku from the spirit floating above you.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3efe7",
+  "theme_color": "#f3efe7",
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

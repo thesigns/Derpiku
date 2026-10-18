@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3efe7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1a24" media="(prefers-color-scheme: dark)">
+<meta name="description" content="A derpy pocket pet that hears haiku from spirits orbiting the Earth. Pet it, take a walk, pet it again — and it tells you a haiku from the spirit floating above you.">
+<title>Derpiku</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="src/style.css">
+<script src="src/orbits.js"></script>
+<script src="src/spirits.js"></script>
+<script src="src/spirit-art.js"></script>
+<script type="module" src="src/main.js"></script>
+</head>
+<body>
+<div id="app">
+
+  <main id="screen-home" class="screen active">
+    <header class="topbar">
+      <h1>Derpiku</h1>
+      <button id="btn-settings" class="icon-button" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z" transform="translate(-1 0)"/></svg>
+      </button>
+    </header>
+    <div id="terrarium">
+      <canvas id="creature-body"></canvas>
+      <canvas id="creature-face" aria-label="Derpiku. Rub it with your finger to pet it."></canvas>
+      <canvas id="spirit" aria-hidden="true"></canvas>
+      <div id="spirit-label" class="spirit-label" aria-live="polite"></div>
+      <div id="bubble" class="bubble" hidden>
+        <button id="bubble-close" class="bubble-close" aria-label="Close">✕</button>
+        <p id="bubble-text"></p>
+        <div class="bubble-footer">
+          <p id="bubble-caption" class="caption" hidden></p>
+          <button id="bubble-copy" class="link-button" hidden>Copy</button>
+        </div>
+      </div>
+    </div>
+    <p id="status" class="status" aria-live="polite"></p>
+    <div id="pawprints" class="pawprints" hidden aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+  </main>
+
+  <section id="screen-radar" class="screen">
+    <header class="topbar"><h1>Radar</h1></header>
+    <div class="radar-wrap">
+      <canvas id="radar" aria-label="Radar: where the walk started, the circle you need to reach, and where you are now."></canvas>
+    </div>
+    <p id="radar-info" class="status" aria-live="polite"></p>
+    <div class="radar-actions"><button id="btn-compass" class="link-button" hidden>Show which way I’m facing</button></div>
+  </section>
+
+  <section id="screen-orbits" class="screen">
+    <div class="globe-wrap">
+      <canvas id="globe" aria-label="Globe with spirit orbits. Drag to rotate, tap a spirit to see when it flies above you."></canvas>
+      <div id="spirit-card" class="card" hidden>
+        <button id="card-close" class="bubble-close" aria-label="Close">✕</button>
+        <h2><span id="card-swatch" class="swatch"></span><span id="card-name"></span></h2>
+        <p id="card-meta" class="muted"></p>
+        <p id="card-forecast"></p>
+        <button id="btn-locate" class="link-button" hidden>Use my location</button>
+      </div>
+    </div>
+    <div id="overhead" class="overhead" aria-live="polite">
+      <p id="overhead-now"></p>
+      <p id="overhead-next"></p>
+      <button id="btn-overhead-locate" class="link-button" hidden>Use my location</button>
+    </div>
+    <div id="spirit-chips" class="chips" aria-label="Spirits"></div>
+  </section>
+
+  <section id="screen-settings" class="screen">
+    <header class="topbar">
+      <button id="btn-settings-back" class="icon-button" aria-label="Back">←</button>
+      <h1>Settings</h1>
+    </header>
+    <div class="settings">
+      <h2>How far should Derpiku wander?</h2>
+      <p class="muted">Straight-line distance from where you first pet Derpiku. It changes nothing but the walk — same spirits, same haiku. Applies from your next walk.</p>
+      <div id="distance-options" class="options"></div>
+      <h2>About location</h2>
+      <p class="muted">Derpiku reads your position when you pet it, and — only while the app is open — to show how far you’ve walked, the radar and which spirit is floating above you. The radar may also use the phone’s compass to show which way you’re facing. Nothing leaves your device, there is no server, and your route is never saved. The walk’s starting point is deleted after the haiku (or after 3 hours).</p>
+      <h2>About Derpiku</h2>
+      <p class="muted">Twenty-six spirits circle the Earth, one for every letter. Everyone sees the same spirits at the same time. Pet Derpiku, walk away, and pet it again once you’re far enough — it tells you a haiku from the spirit floating above you. Haiku aren’t saved anywhere — copy one if you’d like to keep it.</p>
+    </div>
+  </section>
+
+  <nav class="tabbar">
+    <button data-screen="home" class="on">Derpiku</button>
+    <button data-screen="radar">Radar</button>
+    <button data-screen="orbits">Orbits</button>
+  </nav>
+
+  <div id="onboarding" class="modal" hidden>
+    <div class="modal-card">
+      <h2>Hi, this is Derpiku.</h2>
+      <p>Rub Derpiku with your finger. It tells you how far to walk. Walk away, rub it again — once you’re far enough, it tells you a haiku from the spirit floating above you.</p>
+      <p class="muted">Derpiku uses your location only to check how far you’ve walked and which spirit is above you. Nothing leaves your phone.</p>
+      <h3>How far should Derpiku wander?</h3>
+      <div id="onboarding-options" class="options"></div>
+      <button id="btn-onboarding-done" class="main-button">Let’s go</button>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

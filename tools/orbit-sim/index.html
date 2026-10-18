@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Derpiku — symulator orbit</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --text: #1f2933;
+    --muted: #64748b;
+    --border: #d9dee5;
+    --accent: #2563eb;
+    --map-bg: #e8eef5;
+    --map-grid: rgba(30, 41, 59, 0.18);
+    --map-grid-strong: rgba(30, 41, 59, 0.4);
+    --map-label: #334155;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #11151c;
+      --panel: #181e27;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --border: #2b3442;
+      --accent: #60a5fa;
+      --map-bg: #1a2230;
+      --map-grid: rgba(226, 232, 240, 0.14);
+      --map-grid-strong: rgba(226, 232, 240, 0.35);
+      --map-label: #cbd5e1;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  header, main { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 20px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  h2 { font-size: 17px; margin: 0 0 10px; }
+  .sub, .muted { color: var(--muted); }
+  section {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 10px; }
+  label { display: inline-flex; gap: 6px; align-items: center; }
+  input, select, button, textarea {
+    font: inherit;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+  }
+  input[type="number"] { width: 82px; }
+  input[type="color"] { width: 34px; height: 28px; padding: 1px; }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  canvas { display: block; width: 100%; height: auto; border-radius: 6px; }
+  .canvas-wrap { overflow-x: auto; }
+  #strip { min-width: 700px; }
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { padding: 4px 6px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+  th { font-weight: 600; color: var(--muted); font-size: 12px; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  #spirits-table input[type="number"] { width: 76px; }
+  #spirits-table input[type="text"] { width: 130px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; margin-right: 12px; white-space: nowrap; }
+  .swatch { width: 12px; height: 12px; border-radius: 3px; display: inline-block; flex: none; }
+  .legend { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 0; align-items: center; }
+  .ramp { width: 160px; height: 10px; border-radius: 3px; display: inline-block; margin: 0 6px;
+          background: linear-gradient(90deg, #fff7bc, #fec44f, #ec7014, #cc4c02, #662506); }
+  .row-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  textarea { width: 100%; min-height: 160px; margin-top: 10px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .summary { margin: 8px 0 10px; }
+  .summary b { font-variant-numeric: tabular-nums; }
+  .stale { color: #d97706; }
+  .bar { display: inline-block; height: 8px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .info { min-height: 1.45em; margin-top: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Derpiku — symulator orbit</h1>
+  <p class="sub">Strojenie konstelacji duszków: pokrycie, częstość zmian najbliższego duszka i przeloty nad wybranym miejscem. Konfiguracja zapisuje się w tej przeglądarce.</p>
+</header>
+<main>
+
+<section>
+  <div class="toolbar">
+    <button id="btn-now">Teraz</button>
+    <button id="btn-play">▶ Odtwarzaj</button>
+    <select id="speed" aria-label="Prędkość">
+      <option value="1">czas rzeczywisty</option>
+      <option value="60">1 min / s</option>
+      <option value="600" selected>10 min / s</option>
+      <option value="3600">1 h / s</option>
+      <option value="21600">6 h / s</option>
+    </select>
+    <input id="time-input" type="datetime-local" step="60" aria-label="Czas symulacji">
+    <span id="time-utc" class="muted"></span>
+  </div>
+  <div class="toolbar">
+    <label>Warstwa
+      <select id="layer">
+        <option value="none">brak</option>
+        <option value="nearest" selected>kto jest najbliższy teraz</option>
+        <option value="analysis">wynik analizy globalnej</option>
+      </select>
+    </label>
+    <label>Ślad orbity <input id="track-hours" type="number" value="3" min="0" max="48" step="0.5"> h</label>
+    <label>Reguła wyboru
+      <select id="mode">
+        <option value="km">najbliższy (km)</option>
+        <option value="relative">najbliższy względem zasięgu</option>
+      </select>
+    </label>
+  </div>
+  <canvas id="map"></canvas>
+  <div id="map-legend" class="legend"></div>
+  <div id="hover-info" class="info muted">Najedź na mapę, żeby zobaczyć duszki w zasięgu. Kliknięcie ustawia miejsce do analizy.</div>
+</section>
+
+<section>
+  <h2>Duszki</h2>
+  <div class="table-wrap">
+    <table id="spirits-table">
+      <thead>
+        <tr>
+          <th title="Włączony">Wł.</th>
+          <th>Kolor</th>
+          <th>Nazwa</th>
+          <th class="num" title="Nachylenie orbity. >90° = orbita wsteczna">Nachylenie °</th>
+          <th class="num" title="Czas jednego obiegu">Okres (min)</th>
+          <th class="num" title="Długość węzła wstępującego">Węzeł °</th>
+          <th class="num" title="Faza startowa w epoce 1.01.2026">Faza °</th>
+          <th class="num" title="Promień zasięgu wokół punktu pod duszkiem. 20015 = cała Ziemia">Zasięg (km)</th>
+          <th class="num">Obiegi / dobę</th>
+          <th class="num" title="Najwyższa szerokość geograficzna, nad którą duszek bywa w zasięgu">Sięga do</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="row-buttons">
+    <button id="btn-add">+ Dodaj duszka</button>
+    <button id="btn-reset">Przywróć domyślne</button>
+    <button id="btn-export">Eksport JSON</button>
+    <button id="btn-import">Wczytaj JSON z pola</button>
+  </div>
+  <textarea id="json-box" hidden spellcheck="false"></textarea>
+</section>
+
+<section>
+  <h2>Miejsce</h2>
+  <div class="toolbar">
+    <label>Miasto <select id="city"></select></label>
+    <label>Szer. <input id="lat" type="number" step="0.01" min="-90" max="90"></label>
+    <label>Dł. <input id="lon" type="number" step="0.01" min="-180" max="180"></label>
+    <label>Okres <input id="loc-days" type="number" value="30" min="1" max="60"> dni</label>
+    <button id="btn-loc" class="primary">Analizuj</button>
+  </div>
+  <div id="loc-summary" class="summary"></div>
+  <div class="canvas-wrap"><canvas id="strip"></canvas></div>
+  <div id="strip-legend" class="legend"></div>
+  <div id="strip-info" class="info muted"></div>
+  <div class="table-wrap">
+    <table id="loc-table"></table>
+  </div>
+</section>
+
+<section>
+  <h2>Analiza globalna</h2>
+  <div class="toolbar">
+    <label>Okres <input id="g-days" type="number" value="7" min="1" max="60"> dni</label>
+    <label>Krok <input id="g-step" type="number" value="10" min="1" max="60"> min</label>
+    <label>Siatka <input id="g-grid" type="number" value="3" min="1" max="10" step="0.5"> °</label>
+    <label>Zamieszkane szer. od <input id="g-latmin" type="number" value="-56" min="-90" max="90"> do <input id="g-latmax" type="number" value="78" min="-90" max="90"></label>
+    <button id="btn-global" class="primary">Uruchom</button>
+    <span id="g-progress" class="muted"></span>
+  </div>
+  <div class="toolbar">
+    <label>Pokaż na mapie
+      <select id="g-metric">
+        <option value="gapFrac">% czasu bez duszka w zasięgu</option>
+        <option value="maxGapMin">najdłuższa luka bez duszka (min)</option>
+        <option value="switchesPerDay">zmiany najbliższego duszka / dobę</option>
+        <option value="meanStintMin">średni czas trwania najbliższego (min)</option>
+        <option value="inRangeAvg">średnia liczba duszków w zasięgu</option>
+        <option value="dominant">najczęściej najbliższy duszek</option>
+      </select>
+    </label>
+  </div>
+  <div id="global-summary" class="summary muted">Uruchom analizę, żeby sprawdzić pokrycie całego zamieszkanego świata.</div>
+  <div class="table-wrap">
+    <table id="global-table"></table>
+  </div>
+</section>
+
+</main>
+<script src="../../src/orbits.js"></script>
+<script src="../../src/spirits.js"></script>
+<script>
+'use strict';
+const O = window.Orbits;
+const $ = (id) => document.getElementById(id);
+const DAY = O.DAY_MS, MIN = O.MIN_MS, HOUR = 60 * MIN;
+const STORAGE_KEY = 'derpiku-orbit-sim-spirits-v3';
+const GAP_COLOR = '#000000';
+const PALETTE = ['#94a3b8', '#60a5fa', '#1d4ed8', '#ea580c', '#16a34a', '#9333ea', '#0d9488', '#eab308', '#db2777', '#78716c', '#0891b2', '#65a30d'];
+const RAMP = [[255, 247, 188], [254, 196, 79], [236, 112, 20], [204, 76, 2], [102, 37, 6]];
+const WEEKDAYS = ['nd', 'pn', 'wt', 'śr', 'cz', 'pt', 'sb'];
+
+// The default constellation comes from the game (src/spirits.js), so the simulator and the game never drift apart.
+const DEFAULT_SPIRITS = globalThis.DERPIKU_SPIRITS.map(s => ({
+  name: s.name, color: s.color, inclination: s.inclination, periodMin: s.periodMin,
+  raan: s.raan, phase: s.phase, rangeKm: s.rangeKm, enabled: true,
+}));
+
+const CITIES = [
+  { name: 'Kraków', lat: 50.06, lon: 19.94, tz: 'Europe/Warsaw' },
+  { name: 'Warszawa', lat: 52.23, lon: 21.01, tz: 'Europe/Warsaw' },
+  { name: 'Gdańsk', lat: 54.35, lon: 18.65, tz: 'Europe/Warsaw' },
+  { name: 'Londyn', lat: 51.51, lon: -0.13, tz: 'Europe/London' },
+  { name: 'Reykjavík', lat: 64.15, lon: -21.94, tz: 'Atlantic/Reykjavik' },
+  { name: 'Longyearbyen', lat: 78.22, lon: 15.65, tz: 'Arctic/Longyearbyen' },
+  { name: 'Nowy Jork', lat: 40.71, lon: -74.01, tz: 'America/New_York' },
+  { name: 'Meksyk', lat: 19.43, lon: -99.13, tz: 'America/Mexico_City' },
+  { name: 'Quito', lat: -0.18, lon: -78.47, tz: 'America/Guayaquil' },
+  { name: 'São Paulo', lat: -23.55, lon: -46.63, tz: 'America/Sao_Paulo' },
+  { name: 'Ushuaia', lat: -54.80, lon: -68.30, tz: 'America/Argentina/Ushuaia' },
+  { name: 'Lagos', lat: 6.52, lon: 3.38, tz: 'Africa/Lagos' },
+  { name: 'Nairobi', lat: -1.29, lon: 36.82, tz: 'Africa/Nairobi' },
+  { name: 'Kapsztad', lat: -33.92, lon: 18.42, tz: 'Africa/Johannesburg' },
+  { name: 'Mumbaj', lat: 19.08, lon: 72.88, tz: 'Asia/Kolkata' },
+  { name: 'Singapur', lat: 1.35, lon: 103.82, tz: 'Asia/Singapore' },
+  { name: 'Tokio', lat: 35.68, lon: 139.69, tz: 'Asia/Tokyo' },
+  { name: 'Sydney', lat: -33.87, lon: 151.21, tz: 'Australia/Sydney' },
+  { name: 'Auckland', lat: -36.85, lon: 174.76, tz: 'Pacific/Auckland' },
+];
+
+let spirits = loadSpirits();
+let simTime = Date.now();
+let playing = false;
+let lastFrame = 0;
+let place = { ...CITIES[0], cityIndex: 0 };
+let locResult = null;
+let globalResult = null;
+let globalJob = null;
+let hoverPos = null;
+let locTimer = 0;
+
+// ---------- helpers ----------
+
+function num(v, fallback) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function normalizeSpirit(s, i) {
+  return {
+    name: String(s && s.name != null ? s.name : 'Spirit ' + (i + 1)),
+    color: /^#[0-9a-f]{6}$/i.test(s && s.color) ? s.color : PALETTE[i % PALETTE.length],
+    inclination: num(s && s.inclination, 50),
+    periodMin: Math.max(1, num(s && s.periodMin, 120)),
+    raan: num(s && s.raan, 0),
+    phase: num(s && s.phase, 0),
+    rangeKm: Math.max(1, num(s && s.rangeKm, 3000)),
+    enabled: !(s && s.enabled === false),
+  };
+}
+
+function loadSpirits() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length) return arr.map(normalizeSpirit);
+    }
+  } catch (e) { /* no storage access: use the defaults */ }
+  return DEFAULT_SPIRITS.map(normalizeSpirit);
+}
+
+function saveSpirits() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(spirits)); } catch (e) { /* ignore */ }
+}
+
+function cssVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function hexToRgb(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+function rampColor(t) {
+  t = Math.max(0, Math.min(1, t)) * (RAMP.length - 1);
+  const i = Math.min(RAMP.length - 2, Math.floor(t));
+  const f = t - i;
+  return RAMP[i].map((c, k) => Math.round(c + (RAMP[i + 1][k] - c) * f));
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function fmtDuration(ms) {
+  const totalMin = Math.round(ms / MIN);
+  const d = Math.floor(totalMin / 1440), h = Math.floor(totalMin % 1440 / 60), m = totalMin % 60;
+  if (d > 0) return `${d} d ${h} h ${m} m`;
+  if (h > 0) return `${h} h ${m} m`;
+  return `${m} m`;
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+// Time zone offset of a place in minutes. For a custom point: solar time.
+const dtfCache = {};
+function offsetMin(p, tMs) {
+  if (!p.tz) return Math.round(p.lon / 15) * 60;
+  try {
+    const dtf = dtfCache[p.tz] || (dtfCache[p.tz] = new Intl.DateTimeFormat('en-US', {
+      timeZone: p.tz, hourCycle: 'h23', year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+    }));
+    const parts = {};
+    for (const x of dtf.formatToParts(new Date(tMs))) parts[x.type] = x.value;
+    const asUtc = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour % 24, +parts.minute, +parts.second);
+    return Math.round((asUtc - Math.floor(tMs / 1000) * 1000) / MIN);
+  } catch (e) {
+    return Math.round(p.lon / 15) * 60;
+  }
+}
+
+function fmtPlaceTime(tMs, off) {
+  const d = new Date(tMs + off * MIN);
+  return `${WEEKDAYS[d.getUTCDay()]} ${pad(d.getUTCDate())}.${pad(d.getUTCMonth() + 1)} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+}
+
+function fmtLocalInput(tMs) {
+  const d = new Date(tMs);
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function setupCanvas(canvas, w, h) {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(w * dpr);
+  canvas.height = Math.round(h * dpr);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return ctx;
+}
+
+function mode() { return $('mode').value; }
+
+// ---------- spirits table ----------
+
+const FIELDS = [
+  { key: 'inclination', step: 1 },
+  { key: 'periodMin', step: 1, min: 1 },
+  { key: 'raan', step: 1 },
+  { key: 'phase', step: 1 },
+  { key: 'rangeKm', step: 100, min: 1 },
+];
+
+function derivedCells(s) {
+  const orbits = (1440 / s.periodMin).toFixed(2);
+  const reach = s.rangeKm >= O.HALF_CIRCUMFERENCE_KM ? 'cała Ziemia' : '±' + O.maxReachLat(s).toFixed(0) + '°';
+  return [orbits, reach];
+}
+
+function renderSpiritsTable() {
+  const tbody = $('spirits-table').querySelector('tbody');
+  tbody.innerHTML = '';
+  spirits.forEach((s, i) => {
+    const tr = document.createElement('tr');
+    const cell = (child, cls) => {
+      const td = document.createElement('td');
+      if (cls) td.className = cls;
+      if (child) td.appendChild(child);
+      tr.appendChild(td);
+      return td;
+    };
+    const en = document.createElement('input');
+    en.type = 'checkbox';
+    en.checked = s.enabled;
+    en.addEventListener('change', () => { s.enabled = en.checked; spiritsChanged(); });
+    cell(en);
+
+    const col = document.createElement('input');
+    col.type = 'color';
+    col.value = s.color;
+    col.addEventListener('input', () => { s.color = col.value; spiritsChanged(true); });
+    cell(col);
+
+    const nm = document.createElement('input');
+    nm.type = 'text';
+    nm.value = s.name;
+    nm.addEventListener('input', () => { s.name = nm.value; spiritsChanged(true); });
+    cell(nm);
+
+    for (const f of FIELDS) {
+      const inp = document.createElement('input');
+      inp.type = 'number';
+      inp.step = f.step;
+      if (f.min != null) inp.min = f.min;
+      inp.value = s[f.key];
+      inp.addEventListener('input', () => {
+        const v = Number(inp.value);
+        if (!Number.isFinite(v) || (f.min != null && v < f.min)) return;
+        s[f.key] = v;
+        const [orbits, reach] = derivedCells(s);
+        orbitsTd.textContent = orbits;
+        reachTd.textContent = reach;
+        spiritsChanged();
+      });
+      cell(inp, 'num');
+    }
+    const [orbits, reach] = derivedCells(s);
+    const orbitsTd = cell(null, 'num');
+    orbitsTd.textContent = orbits;
+    const reachTd = cell(null, 'num');
+    reachTd.textContent = reach;
+
+    const del = document.createElement('button');
+    del.textContent = '×';
+    del.title = 'Usuń duszka';
+    del.addEventListener('click', () => {
+      spirits.splice(i, 1);
+      renderSpiritsTable();
+      spiritsChanged();
+    });
+    cell(del);
+    tbody.appendChild(tr);
+  });
+}
+
+// cosmetic = only color / name: doesn't invalidate the analyses.
+function spiritsChanged(cosmetic) {
+  saveSpirits();
+  if (!cosmetic) {
+    if (globalResult) {
+      globalResult.stale = true;
+      renderGlobal();
+    }
+    clearTimeout(locTimer);
+    locTimer = setTimeout(runLocation, 250);
+  } else {
+    renderLocation();
+    renderGlobal();
+  }
+  drawMap();
+  renderLegend();
+}
+
+// ---------- map ----------
+
+const MAP_W = 1080, MAP_H = 540;
+const mapCanvas = $('map');
+const mapCtx = setupCanvas(mapCanvas, MAP_W, MAP_H);
+const projX = lon => (lon + 180) / 360 * MAP_W;
+const projY = lat => (90 - lat) / 180 * MAP_H;
+
+const NEAR_DEG = 2, NEAR_COLS = 360 / NEAR_DEG, NEAR_ROWS = 180 / NEAR_DEG;
+const nearVecs = new Float64Array(NEAR_COLS * NEAR_ROWS * 3);
+for (let r = 0; r < NEAR_ROWS; r++) {
+  for (let c = 0; c < NEAR_COLS; c++) {
+    const v = O.latLonToVec(90 - (r + 0.5) * NEAR_DEG, -180 + (c + 0.5) * NEAR_DEG);
+    nearVecs.set(v, (r * NEAR_COLS + c) * 3);
+  }
+}
+const nearCanvas = document.createElement('canvas');
+nearCanvas.width = NEAR_COLS;
+nearCanvas.height = NEAR_ROWS;
+const nearCtx = nearCanvas.getContext('2d');
+const nearImg = nearCtx.createImageData(NEAR_COLS, NEAR_ROWS);
+
+function drawNearestLayer() {
+  const act = spirits.map((s, i) => i).filter(i => spirits[i].enabled);
+  const sv = act.map(i => O.subpointVec(spirits[i], simTime));
+  const cosR = act.map(i => Math.cos(O.rangeRad(spirits[i])));
+  const rr = act.map(i => O.rangeRad(spirits[i]));
+  const rgb = act.map(i => hexToRgb(spirits[i].color));
+  const gap = hexToRgb(GAP_COLOR);
+  const rel = mode() === 'relative';
+  const data = nearImg.data;
+  for (let k = 0; k < NEAR_COLS * NEAR_ROWS; k++) {
+    const x = nearVecs[k * 3], y = nearVecs[k * 3 + 1], z = nearVecs[k * 3 + 2];
+    let best = -1, bestScore = -Infinity;
+    for (let a = 0; a < act.length; a++) {
+      const d = x * sv[a][0] + y * sv[a][1] + z * sv[a][2];
+      if (d < cosR[a]) continue;
+      const score = rel ? -Math.acos(Math.min(1, d)) / rr[a] : d;
+      if (score > bestScore) { bestScore = score; best = a; }
+    }
+    const c = best < 0 ? gap : rgb[best];
+    data[k * 4] = c[0]; data[k * 4 + 1] = c[1]; data[k * 4 + 2] = c[2];
+    data[k * 4 + 3] = best < 0 ? 150 : 95;
+  }
+  nearCtx.putImageData(nearImg, 0, 0);
+  mapCtx.imageSmoothingEnabled = false;
+  mapCtx.drawImage(nearCanvas, 0, 0, MAP_W, MAP_H);
+}
+
+let analysisCanvas = null;
+let analysisMax = 0;
+
+function buildAnalysisLayer() {
+  analysisCanvas = null;
+  if (!globalResult) return;
+  const r = globalResult, metric = $('g-metric').value;
+  const cv = document.createElement('canvas');
+  cv.width = r.cols;
+  cv.height = r.rows;
+  const ctx = cv.getContext('2d');
+  const img = ctx.createImageData(r.cols, r.rows);
+  const values = r[metric];
+  let max = 0;
+  if (metric !== 'dominant') for (let i = 0; i < values.length; i++) max = Math.max(max, values[i]);
+  analysisMax = max;
+  for (let row = 0; row < r.rows; row++) {
+    for (let c = 0; c < r.cols; c++) {
+      const i = row * r.cols + c;
+      const o = ((r.rows - 1 - row) * r.cols + c) * 4; // row 0 is the southernmost
+      let rgb;
+      if (metric === 'dominant') {
+        const s = values[i];
+        rgb = s < 0 || !spirits[s] ? hexToRgb(GAP_COLOR) : hexToRgb(spirits[s].color);
+      } else {
+        rgb = rampColor(max > 0 ? values[i] / max : 0);
+      }
+      img.data[o] = rgb[0]; img.data[o + 1] = rgb[1]; img.data[o + 2] = rgb[2]; img.data[o + 3] = 200;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  analysisCanvas = cv;
+}
+
+function drawAnalysisLayer() {
+  if (!analysisCanvas) return;
+  const r = globalResult;
+  const top = r.latMin + r.rows * r.gridDeg;
+  mapCtx.imageSmoothingEnabled = false;
+  mapCtx.drawImage(analysisCanvas, 0, projY(top), MAP_W, projY(r.latMin) - projY(top));
+}
+
+function strokeGeoPath(points) {
+  mapCtx.beginPath();
+  let prev = null;
+  for (const p of points) {
+    const x = projX(p.lon), y = projY(p.lat);
+    if (!prev || Math.abs(p.lon - prev.lon) > 180) mapCtx.moveTo(x, y); else mapCtx.lineTo(x, y);
+    prev = p;
+  }
+  mapCtx.stroke();
+}
+
+function rangeCirclePoints(center, ang) {
+  const h = Math.abs(center[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0];
+  let e1 = [center[1] * h[2] - center[2] * h[1], center[2] * h[0] - center[0] * h[2], center[0] * h[1] - center[1] * h[0]];
+  const len = Math.hypot(e1[0], e1[1], e1[2]);
+  e1 = e1.map(v => v / len);
+  const e2 = [center[1] * e1[2] - center[2] * e1[1], center[2] * e1[0] - center[0] * e1[2], center[0] * e1[1] - center[1] * e1[0]];
+  const pts = [];
+  const ca = Math.cos(ang), sa = Math.sin(ang);
+  for (let k = 0; k <= 120; k++) {
+    const t = k / 120 * 2 * Math.PI, ct = Math.cos(t), st = Math.sin(t);
+    pts.push(O.vecToLatLon([0, 1, 2].map(j => ca * center[j] + sa * (ct * e1[j] + st * e2[j]))));
+  }
+  return pts;
+}
+
+function drawMap() {
+  const ctx = mapCtx;
+  ctx.fillStyle = cssVar('--map-bg');
+  ctx.fillRect(0, 0, MAP_W, MAP_H);
+
+  const layer = $('layer').value;
+  if (layer === 'nearest') drawNearestLayer();
+  if (layer === 'analysis') drawAnalysisLayer();
+
+  // grid
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = cssVar('--map-grid');
+  ctx.beginPath();
+  for (let lon = -180; lon <= 180; lon += 30) { ctx.moveTo(projX(lon), 0); ctx.lineTo(projX(lon), MAP_H); }
+  for (let lat = -60; lat <= 60; lat += 30) { if (lat) { ctx.moveTo(0, projY(lat)); ctx.lineTo(MAP_W, projY(lat)); } }
+  ctx.stroke();
+  ctx.strokeStyle = cssVar('--map-grid-strong');
+  ctx.beginPath();
+  ctx.moveTo(0, projY(0)); ctx.lineTo(MAP_W, projY(0));
+  ctx.stroke();
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  for (const lat of [num($('g-latmin').value, -56), num($('g-latmax').value, 78)]) {
+    ctx.moveTo(0, projY(lat)); ctx.lineTo(MAP_W, projY(lat));
+  }
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // cities
+  ctx.font = '11px system-ui, sans-serif';
+  ctx.fillStyle = cssVar('--map-label');
+  for (const c of CITIES) {
+    const x = projX(c.lon), y = projY(c.lat);
+    ctx.beginPath(); ctx.arc(x, y, 2, 0, 2 * Math.PI); ctx.fill();
+    ctx.fillText(c.name, x + 4, y - 3);
+  }
+  ctx.strokeStyle = cssVar('--accent');
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(projX(place.lon), projY(place.lat), 6, 0, 2 * Math.PI); ctx.stroke();
+
+  // tracks, ranges, spirits
+  const trackMs = Math.max(0, num($('track-hours').value, 3)) * HOUR;
+  spirits.forEach(s => {
+    if (!s.enabled) return;
+    if (trackMs > 0) {
+      const step = Math.min(s.periodMin / 120, 5) * MIN;
+      const pts = [];
+      for (let t = simTime; t <= simTime + trackMs; t += step) pts.push(O.subpoint(s, t));
+      ctx.strokeStyle = s.color;
+      ctx.globalAlpha = 0.7;
+      ctx.lineWidth = 1.5;
+      strokeGeoPath(pts);
+      ctx.globalAlpha = 1;
+    }
+    const v = O.subpointVec(s, simTime);
+    const ang = O.rangeRad(s);
+    if (ang < Math.PI - 1e-6) {
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      strokeGeoPath(rangeCirclePoints(v, ang));
+      ctx.setLineDash([]);
+    }
+  });
+  spirits.forEach(s => {
+    if (!s.enabled) return;
+    const p = O.subpoint(s, simTime);
+    const x = projX(p.lon), y = projY(p.lat);
+    ctx.fillStyle = s.color;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(x, y, 8, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(s.name.trim().charAt(0).toUpperCase(), x, y + 0.5);
+    ctx.textAlign = 'start';
+    ctx.textBaseline = 'alphabetic';
+  });
+}
+
+function renderLegend() {
+  const layer = $('layer').value;
+  const el = $('map-legend');
+  const chips = spirits.filter(s => s.enabled)
+    .map(s => `<span class="chip"><span class="swatch" style="background:${s.color}"></span>${escapeHtml(s.name)}</span>`).join('');
+  if (layer === 'analysis' && globalResult && $('g-metric').value !== 'dominant') {
+    const label = $('g-metric').selectedOptions[0].textContent;
+    el.innerHTML = `<span class="chip">${escapeHtml(label)}: 0<span class="ramp"></span>${analysisMax.toFixed(analysisMax < 10 ? 2 : 0)}</span>`;
+  } else if (layer === 'analysis' && !globalResult) {
+    el.innerHTML = '<span class="muted">Brak wyniku — uruchom analizę globalną poniżej.</span>';
+  } else {
+    el.innerHTML = chips + `<span class="chip"><span class="swatch" style="background:${GAP_COLOR}"></span>brak duszka w zasięgu</span>`;
+  }
+}
+
+function updateHoverInfo() {
+  if (!hoverPos) return;
+  const { lat, lon } = hoverPos;
+  const v = O.latLonToVec(lat, lon);
+  const pick = O.pickSpirit(spirits, v, simTime, mode());
+  const inRange = [];
+  const sv = new Float64Array(3);
+  spirits.forEach(s => {
+    if (!s.enabled) return;
+    O.subpointVec(s, simTime, sv);
+    const d = O.distanceKm(sv, v);
+    if (d <= s.rangeKm) inRange.push(`${escapeHtml(s.name)} (${Math.round(d)} km)`);
+  });
+  let html = `${lat.toFixed(1)}°, ${lon.toFixed(1)}° — `;
+  html += pick ? `złapałby: <b>${escapeHtml(spirits[pick.index].name)}</b>` : '<b>brak duszka</b>';
+  html += ` · w zasięgu: ${inRange.length ? inRange.join(', ') : '—'}`;
+  if ($('layer').value === 'analysis' && globalResult) {
+    const r = globalResult;
+    const row = Math.floor((lat - r.latMin) / r.gridDeg);
+    const col = Math.floor((lon + 180) / r.gridDeg) % r.cols;
+    if (row >= 0 && row < r.rows) {
+      const metric = $('g-metric').value;
+      const val = r[metric][row * r.cols + col];
+      const shown = metric === 'dominant' ? (spirits[val] ? spirits[val].name : 'brak')
+        : metric === 'gapFrac' ? (val * 100).toFixed(1) + '%' : val.toFixed(1);
+      html += ` · analiza: ${escapeHtml(String(shown))}`;
+    }
+  }
+  $('hover-info').innerHTML = html;
+}
+
+function mapEventPos(e) {
+  const rect = mapCanvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width * MAP_W;
+  const y = (e.clientY - rect.top) / rect.height * MAP_H;
+  return { lat: Math.max(-90, Math.min(90, 90 - y / MAP_H * 180)), lon: Math.max(-180, Math.min(180, x / MAP_W * 360 - 180)) };
+}
+
+mapCanvas.addEventListener('mousemove', e => { hoverPos = mapEventPos(e); updateHoverInfo(); });
+mapCanvas.addEventListener('mouseleave', () => { hoverPos = null; });
+mapCanvas.addEventListener('click', e => {
+  const p = mapEventPos(e);
+  place = { name: 'Własne miejsce', lat: +p.lat.toFixed(2), lon: +p.lon.toFixed(2), tz: null, cityIndex: -1 };
+  syncPlaceInputs();
+  runLocation();
+  drawMap();
+});
+
+// ---------- time ----------
+
+function updateTimeDisplay() {
+  if (document.activeElement !== $('time-input')) $('time-input').value = fmtLocalInput(simTime);
+  $('time-utc').textContent = 'UTC ' + new Date(simTime).toISOString().slice(0, 16).replace('T', ' ');
+}
+
+function setTime(t) {
+  simTime = t;
+  updateTimeDisplay();
+  drawMap();
+  updateHoverInfo();
+  renderLocation();
+}
+
+function frame(ts) {
+  if (!playing) return;
+  const dt = lastFrame ? ts - lastFrame : 0;
+  lastFrame = ts;
+  simTime += dt * Number($('speed').value);
+  updateTimeDisplay();
+  drawMap();
+  updateHoverInfo();
+  requestAnimationFrame(frame);
+}
+
+$('btn-play').addEventListener('click', () => {
+  playing = !playing;
+  $('btn-play').textContent = playing ? '❚❚ Pauza' : '▶ Odtwarzaj';
+  lastFrame = 0;
+  if (playing) requestAnimationFrame(frame); else renderLocation();
+});
+$('btn-now').addEventListener('click', () => setTime(Date.now()));
+$('time-input').addEventListener('change', () => {
+  const t = new Date($('time-input').value).getTime();
+  if (Number.isFinite(t)) setTime(t);
+});
+$('layer').addEventListener('change', () => { drawMap(); renderLegend(); });
+$('track-hours').addEventListener('input', drawMap);
+$('mode').addEventListener('change', () => {
+  drawMap();
+  runLocation();
+  if (globalResult) { globalResult.stale = true; renderGlobal(); }
+});
+
+// ---------- location ----------
+
+function syncPlaceInputs() {
+  $('city').value = String(place.cityIndex);
+  $('lat').value = place.lat;
+  $('lon').value = place.lon;
+}
+
+function initCitySelect() {
+  const sel = $('city');
+  CITIES.forEach((c, i) => sel.add(new Option(c.name, String(i))));
+  sel.add(new Option('Własne (kliknij mapę lub wpisz)', '-1'));
+  sel.addEventListener('change', () => {
+    const i = Number(sel.value);
+    if (i >= 0) {
+      place = { ...CITIES[i], cityIndex: i };
+      syncPlaceInputs();
+      runLocation();
+      drawMap();
+    }
+  });
+  const manual = () => {
+    const lat = num($('lat').value, NaN), lon = num($('lon').value, NaN);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return;
+    place = { name: 'Własne miejsce', lat, lon, tz: null, cityIndex: -1 };
+    $('city').value = '-1';
+    drawMap();
+  };
+  $('lat').addEventListener('change', manual);
+  $('lon').addEventListener('change', manual);
+}
+
+function runLocation() {
+  const days = Math.max(1, Math.min(60, Math.round(num($('loc-days').value, 30))));
+  const off = offsetMin(place, simTime);
+  const localMs = simTime + off * MIN;
+  const startMs = Math.floor(localMs / DAY) * DAY - off * MIN; // local midnight of the simulated day
+  const res = O.analyzeLocation(spirits, place.lat, place.lon, { startMs, days, mode: mode() });
+  res.offMin = off;
+  res.mode = mode();
+  res.place = { ...place };
+  res.spiritSnapshot = spirits.map(s => ({ ...s }));
+  locResult = res;
+  renderLocation();
+}
+
+const stripCanvas = $('strip');
+const STRIP_LEFT = 74, STRIP_TOP = 20, STRIP_DATA_W = 720;
+let stripCtx = null, stripRowH = 8;
+
+function renderLocation() {
+  const r = locResult;
+  if (!r) return;
+  const p = r.place;
+  const stepsPerDay = Math.round(DAY / r.stepMs);
+  const perMin = r.switchesPerDay > 0 ? 1440 / r.switchesPerDay : Infinity;
+  $('loc-summary').innerHTML =
+    `<b>${escapeHtml(p.name)}</b> (${p.lat.toFixed(2)}°, ${p.lon.toFixed(2)}°) · ${r.days} dni od ${fmtPlaceTime(r.startMs, r.offMin)} czasu lokalnego<br>` +
+    `Najbliższy duszek zmienia się średnio <b>${r.switchesPerDay.toFixed(1)}×</b> na dobę (co ~<b>${Number.isFinite(perMin) ? Math.round(perMin) : '∞'} min</b>), ` +
+    `mediana trwania: <b>${r.medianStintMin.toFixed(0)} min</b> · bez duszka w zasięgu: <b>${(r.gapFrac * 100).toFixed(1)}%</b> czasu`;
+
+  // day strip: one row = one day, color = the spirit the player would get
+  stripRowH = r.days <= 14 ? 14 : r.days <= 31 ? 9 : 6;
+  const h = STRIP_TOP + r.days * (stripRowH + 1) + 4;
+  const w = STRIP_LEFT + STRIP_DATA_W + 24;
+  stripCtx = setupCanvas(stripCanvas, w, h);
+  const ctx = stripCtx;
+  ctx.fillStyle = cssVar('--panel');
+  ctx.fillRect(0, 0, w, h);
+  ctx.font = '11px system-ui, sans-serif';
+  ctx.fillStyle = cssVar('--muted');
+  ctx.textAlign = 'center';
+  for (let hr = 0; hr <= 24; hr += 3) ctx.fillText(pad(hr) + ':00', STRIP_LEFT + hr / 24 * STRIP_DATA_W, 12);
+  ctx.textAlign = 'start';
+  const colors = r.spiritSnapshot.map(s => s.color);
+  const pxPerStep = STRIP_DATA_W / stepsPerDay;
+  for (let d = 0; d < r.days; d++) {
+    const y = STRIP_TOP + d * (stripRowH + 1);
+    const label = fmtPlaceTime(r.startMs + d * DAY, r.offMin).slice(0, 8);
+    ctx.fillStyle = cssVar('--muted');
+    if (stripRowH >= 8 || d % 2 === 0) ctx.fillText(label, 4, y + stripRowH - 1);
+    let runStart = 0;
+    for (let k = 1; k <= stepsPerDay; k++) {
+      const idx = d * stepsPerDay + k;
+      const prev = r.nearest[d * stepsPerDay + k - 1];
+      if (k === stepsPerDay || r.nearest[idx] !== prev) {
+        ctx.fillStyle = prev < 0 ? GAP_COLOR : colors[prev];
+        ctx.fillRect(STRIP_LEFT + runStart * pxPerStep, y, (k - runStart) * pxPerStep, stripRowH);
+        runStart = k;
+      }
+    }
+  }
+  if (simTime >= r.startMs && simTime < r.startMs + r.days * DAY) {
+    const k = (simTime - r.startMs) / r.stepMs;
+    const d = Math.floor(k / stepsPerDay);
+    const x = STRIP_LEFT + (k - d * stepsPerDay) * pxPerStep;
+    const y = STRIP_TOP + d * (stripRowH + 1);
+    ctx.strokeStyle = cssVar('--text');
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x - 1, y - 2, 2, stripRowH + 4);
+  }
+  $('strip-legend').innerHTML = r.spiritSnapshot.filter(s => s.enabled)
+    .map(s => `<span class="chip"><span class="swatch" style="background:${s.color}"></span>${escapeHtml(s.name)}</span>`).join('') +
+    `<span class="chip"><span class="swatch" style="background:${GAP_COLOR}"></span>brak duszka</span>` +
+    `<span class="chip muted">kolor = duszek, którego złapałby gracz o tej porze</span>`;
+
+  // table
+  const pv = O.latLonToVec(p.lat, p.lon);
+  const weeks = r.days / 7;
+  let html = '<thead><tr><th>Duszek</th><th class="num">Sięga do</th><th class="num">W zasięgu</th><th class="num">Najbliższy</th>' +
+    '<th class="num">Okna „najbliższy” / tydz.</th><th class="num">Śr. okno</th><th class="num">Najdłuższa przerwa</th>' +
+    '<th>Prognoza w grze: okno złapania (60 dni)</th><th>Dla porównania: wejście w zasięg</th></tr></thead><tbody>';
+  r.perSpirit.forEach((ps, i) => {
+    const s = r.spiritSnapshot[i];
+    if (!s.enabled) return;
+    const reach = s.rangeKm >= O.HALF_CIRCUMFERENCE_KM ? 'cała Ziemia' : '±' + O.maxReachLat(s).toFixed(0) + '°';
+    let nextNearest = 'Nigdy nad tobą';
+    if (ps.reachable) {
+      const w = O.nextCatchWindow(r.spiritSnapshot, i, pv, simTime, 60 * DAY, MIN, r.mode);
+      nextNearest = !w ? 'nie w najbliższym czasie'
+        : w.start <= simTime ? `teraz (jeszcze ${fmtDuration(w.end - simTime)})`
+        : `za ${fmtDuration(w.start - simTime)} · ${fmtPlaceTime(w.start, r.offMin)}` + (Number.isFinite(w.end) ? ` na ${fmtDuration(w.end - w.start)}` : '');
+    }
+    let nextPass = 'Nigdy nad tobą';
+    if (ps.reachable) {
+      const np = O.nextPass(s, pv, simTime, 60 * DAY, MIN);
+      nextPass = !np ? 'nie w najbliższym czasie'
+        : np.start <= simTime ? 'teraz'
+        : `za ${fmtDuration(np.start - simTime)} · ${fmtPlaceTime(np.start, r.offMin)}` + (Number.isFinite(np.end) ? ` na ${fmtDuration(np.end - np.start)}` : '');
+    }
+    html += `<tr><td><span class="chip"><span class="swatch" style="background:${s.color}"></span>${escapeHtml(s.name)}</span></td>` +
+      `<td class="num">${reach}</td>` +
+      `<td class="num">${(ps.inRangeFrac * 100).toFixed(1)}%</td>` +
+      `<td class="num"><span class="bar" style="width:${Math.round(ps.nearestFrac * 80)}px;background:${s.color}"></span>${(ps.nearestFrac * 100).toFixed(1)}%</td>` +
+      `<td class="num">${(ps.nearestWindows.length / weeks).toFixed(1)}</td>` +
+      `<td class="num">${ps.nearestWindows.length ? Math.round(ps.avgNearestWindowMin) + ' min' : '—'}</td>` +
+      `<td class="num">${ps.nearestWindows.length > 1 ? fmtDuration(ps.maxNearestGapMs) : '—'}</td>` +
+      `<td>${nextNearest}</td><td>${nextPass}</td></tr>`;
+  });
+  $('loc-table').innerHTML = html + '</tbody>';
+}
+
+stripCanvas.addEventListener('mousemove', e => {
+  const r = locResult;
+  if (!r || !stripCtx) return;
+  const rect = stripCanvas.getBoundingClientRect();
+  const w = STRIP_LEFT + STRIP_DATA_W + 24;
+  const scale = w / rect.width;
+  const x = (e.clientX - rect.left) * scale - STRIP_LEFT;
+  const y = (e.clientY - rect.top) * scale - STRIP_TOP;
+  const d = Math.floor(y / (stripRowH + 1));
+  if (x < 0 || x >= STRIP_DATA_W || d < 0 || d >= r.days) { $('strip-info').textContent = ''; return; }
+  const stepsPerDay = Math.round(DAY / r.stepMs);
+  const k = d * stepsPerDay + Math.floor(x / STRIP_DATA_W * stepsPerDay);
+  const s = r.nearest[k];
+  const t = r.startMs + k * r.stepMs;
+  $('strip-info').textContent = `${fmtPlaceTime(t, r.offMin)} — ${s < 0 ? 'brak duszka' : r.spiritSnapshot[s].name}`;
+});
+stripCanvas.addEventListener('click', e => {
+  const r = locResult;
+  if (!r) return;
+  const rect = stripCanvas.getBoundingClientRect();
+  const scale = (STRIP_LEFT + STRIP_DATA_W + 24) / rect.width;
+  const x = (e.clientX - rect.left) * scale - STRIP_LEFT;
+  const d = Math.floor(((e.clientY - rect.top) * scale - STRIP_TOP) / (stripRowH + 1));
+  if (x < 0 || x >= STRIP_DATA_W || d < 0 || d >= r.days) return;
+  setTime(r.startMs + d * DAY + x / STRIP_DATA_W * DAY);
+});
+$('btn-loc').addEventListener('click', runLocation);
+$('loc-days').addEventListener('change', runLocation);
+
+// ---------- global analysis ----------
+
+function runGlobal() {
+  if (globalJob) { globalJob.cancelled = true; globalJob = null; $('btn-global').textContent = 'Uruchom'; $('g-progress').textContent = 'przerwano'; return; }
+  const opts = {
+    startMs: simTime,
+    days: Math.max(1, Math.min(60, num($('g-days').value, 7))),
+    stepMin: Math.max(1, num($('g-step').value, 10)),
+    gridDeg: Math.max(0.5, num($('g-grid').value, 3)),
+    latMin: num($('g-latmin').value, -56),
+    latMax: num($('g-latmax').value, 78),
+    mode: mode(),
+  };
+  if (opts.latMax <= opts.latMin) { $('g-progress').textContent = 'zły zakres szerokości'; return; }
+  const snapshot = spirits.map(s => ({ ...s }));
+  const job = { analysis: O.createGridAnalysis(snapshot, opts), cancelled: false, chunk: 4 };
+  globalJob = job;
+  $('btn-global').textContent = 'Przerwij';
+  const tick = () => {
+    if (job.cancelled) return;
+    const t0 = performance.now();
+    const done = job.analysis.advance(job.chunk);
+    const dt = performance.now() - t0;
+    job.chunk = Math.max(1, Math.round(job.chunk * Math.min(4, 40 / Math.max(1, dt))));
+    $('g-progress').textContent = Math.round(job.analysis.progress * 100) + '%';
+    if (!done) { setTimeout(tick, 0); return; }
+    globalJob = null;
+    $('btn-global').textContent = 'Uruchom';
+    $('g-progress').textContent = 'gotowe';
+    globalResult = job.analysis.result();
+    globalResult.opts = opts;
+    globalResult.spiritSnapshot = snapshot;
+    globalResult.stale = false;
+    $('layer').value = 'analysis';
+    renderGlobal();
+    drawMap();
+    renderLegend();
+  };
+  tick();
+}
+
+function renderGlobal() {
+  const r = globalResult;
+  if (!r) return;
+  buildAnalysisLayer();
+  const perMin = r.meanSwitchesPerDay > 0 ? Math.round(1440 / r.meanSwitchesPerDay) : '∞';
+  $('global-summary').className = 'summary';
+  $('global-summary').innerHTML =
+    (r.stale ? '<span class="stale">Duszki lub reguła zmieniły się od ostatniej analizy — uruchom ponownie.</span><br>' : '') +
+    `${r.opts.days} dni od ${new Date(r.opts.startMs).toISOString().slice(0, 16).replace('T', ' ')} UTC, krok ${r.opts.stepMin} min, siatka ${r.gridDeg}°, szerokości ${r.latMin}°…${r.latMax}°<br>` +
+    `Czas bez duszka w zasięgu: <b>${(r.globalGapFrac * 100).toFixed(2)}%</b> (średnio, ważone powierzchnią) · ` +
+    `komórek z jakąkolwiek luką: <b>${(r.cellsWithGapFrac * 100).toFixed(1)}%</b> · najdłuższa luka: <b>${r.worstGapMin} min</b><br>` +
+    `Najbliższy duszek zmienia się średnio <b>${r.meanSwitchesPerDay.toFixed(1)}×</b> na dobę (co ~<b>${perMin} min</b>)`;
+  let html = '<thead><tr><th>Duszek</th><th class="num">Udział jako „najbliższy” (cały świat)</th></tr></thead><tbody>';
+  r.spiritSnapshot.forEach((s, i) => {
+    if (!s.enabled) return;
+    const share = r.shareNearest[i];
+    html += `<tr><td><span class="chip"><span class="swatch" style="background:${s.color}"></span>${escapeHtml(s.name)}</span></td>` +
+      `<td class="num"><span class="bar" style="width:${Math.round(share * 200)}px;background:${s.color}"></span>${(share * 100).toFixed(1)}%</td></tr>`;
+  });
+  $('global-table').innerHTML = html + '</tbody>';
+}
+
+$('btn-global').addEventListener('click', runGlobal);
+$('g-metric').addEventListener('change', () => {
+  buildAnalysisLayer();
+  if (globalResult) $('layer').value = 'analysis';
+  drawMap();
+  renderLegend();
+});
+for (const id of ['g-latmin', 'g-latmax']) $(id).addEventListener('change', drawMap);
+
+// ---------- export / import ----------
+
+$('btn-add').addEventListener('click', () => {
+  spirits.push(normalizeSpirit({ name: 'New Spirit', color: PALETTE[spirits.length % PALETTE.length] }, spirits.length));
+  renderSpiritsTable();
+  spiritsChanged();
+});
+$('btn-reset').addEventListener('click', () => {
+  spirits = DEFAULT_SPIRITS.map(normalizeSpirit);
+  renderSpiritsTable();
+  spiritsChanged();
+});
+$('btn-export').addEventListener('click', () => {
+  const box = $('json-box');
+  box.hidden = false;
+  box.value = JSON.stringify(spirits, null, 2);
+  box.select();
+});
+$('btn-import').addEventListener('click', () => {
+  const box = $('json-box');
+  if (box.hidden) { box.hidden = false; box.value = ''; box.placeholder = 'Wklej tablicę JSON z duszkami i kliknij ponownie „Wczytaj JSON z pola”.'; box.focus(); return; }
+  try {
+    const arr = JSON.parse(box.value);
+    if (!Array.isArray(arr) || !arr.length) throw new Error('to nie jest niepusta tablica');
+    spirits = arr.map(normalizeSpirit);
+    renderSpiritsTable();
+    spiritsChanged();
+  } catch (e) {
+    box.value = 'Błąd: ' + e.message + '\n\n' + box.value;
+  }
+});
+
+// ---------- start ----------
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawMap(); renderLocation(); });
+initCitySelect();
+syncPlaceInputs();
+renderSpiritsTable();
+renderLegend();
+updateTimeDisplay();
+drawMap();
+runLocation();
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Derpiku — spirit gallery</title>
+<style>
+  :root { --bg: #f3efe7; --ink: #2a2733; --muted: #776f86; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1c1a24; --ink: #ece8f2; --muted: #a39db0; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.4 system-ui, sans-serif; }
+  header { padding: 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  h1 { font-size: 18px; margin: 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; padding: 0 16px 24px; }
+  figure { margin: 0; text-align: center; }
+  canvas { width: 100%; aspect-ratio: 3 / 4; display: block; }
+  figcaption { color: var(--muted); }
+  body.space { background: #0d1222; color: #e8ecf8; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Derpiku — spirit gallery</h1>
+  <label><input type="checkbox" id="space"> night sky background</label>
+</header>
+<div class="grid" id="grid"></div>
+<script src="../src/spirits.js"></script>
+<script src="../src/spirit-art.js"></script>
+<script>
+  const items = globalThis.DERPIKU_SPIRITS.map(s => {
+    const fig = document.createElement('figure');
+    const canvas = document.createElement('canvas');
+    const cap = document.createElement('figcaption');
+    cap.textContent = s.name;
+    fig.append(canvas, cap);
+    document.getElementById('grid').appendChild(fig);
+    return { s, canvas, ctx: canvas.getContext('2d') };
+  });
+  document.getElementById('space').addEventListener('change', e => document.body.classList.toggle('space', e.target.checked));
+  function frame(now) {
+    const t = now / 1000, dpr = Math.min(devicePixelRatio || 1, 2);
+    for (const it of items) {
+      const w = it.canvas.clientWidth, h = it.canvas.clientHeight;
+      if (it.canvas.width !== Math.round(w * dpr)) { it.canvas.width = Math.round(w * dpr); it.canvas.height = Math.round(h * dpr); }
+      it.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      it.ctx.clearRect(0, 0, w, h);
+      const r = w * 0.2;
+      SpiritArt.draw(it.ctx, it.s, t, { x: w / 2, y: h * 0.42 + Math.sin(t * 1.6) * r * 0.08, r });
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+</script>
+</body>
+</html>

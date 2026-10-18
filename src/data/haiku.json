@@ -1,0 +1,678 @@
+{
+ "Axolotl": {
+  "spring": [
+   "thaw in the canal —\nan axolotl smiles up\nat my muddy feet",
+   "cherry petals sink\nthe axolotl wears one\nlike a small pink hat",
+   "spring rain on the pond\nfeathery gills open\none by one",
+   "I wave at the axolotl\nit waves back...\nwith a brand new hand"
+  ],
+  "summer": [
+   "hot afternoon —\nthe axolotl and I\nboth stay in the shade",
+   "summer storm\nunder the lily pad\na pink grin waits it out",
+   "long evening\nthe axolotl yawns\nso I yawn too",
+   "cool mud\nbetween my toes —\naxolotl country"
+  ],
+  "autumn": [
+   "fog on the lake\nsomewhere below\na smile I can't see",
+   "a maple leaf drifts down\nthe axolotl\nnibbles its shadow",
+   "harvest moon\nfloating in the canal —\nan axolotl swims through",
+   "autumn wind\nI hold my breath like an axolotl\n... nope"
+  ],
+  "winter": [
+   "thin ice\nbeneath it a pink smile\nslow as snow",
+   "first frost on the reeds\nthe axolotl\ndoesn't mind at all",
+   "long night —\nan axolotl dreams\nat the bottom of the lake",
+   "snowflake on my nose\nthe axolotl\nhas no nose to catch one"
+  ]
+ },
+ "Bee": {
+  "spring": [
+   "plum blossom —\na bee and I\nreach it at the same time",
+   "after the rain\na bee dries its wings\non top of my head",
+   "dandelion field\none bee\nhumming the way home",
+   "spring wind\nthe bee lands on a petal\nthat just flew off"
+  ],
+  "summer": [
+   "heat shimmer\nthe buzz of the bees\nthick as honey",
+   "clover in the lawn\nI follow a bee\nand fall over",
+   "thunder far off\nbees pour back\ninto the hive",
+   "long evening —\nthe last bee\nhums the sun down"
+  ],
+  "autumn": [
+   "late asters\na slow bee\nwith yellow knees",
+   "fallen apple\na bee and a wasp\nshare without talking",
+   "morning mist\nthe hive door\nquiet as a pocket",
+   "cold morning —\na bee rests on my paw\nwe warm each other"
+  ],
+  "winter": [
+   "snow on the hive\ninside, a hum\nlike a sleeping kettle",
+   "winter sun\none bee steps out\nand thinks again",
+   "frost on the window\nI draw a flower\nfor the bees",
+   "long night\nthe hive keeps\na summer inside"
+  ]
+ },
+ "Cat": {
+  "spring": [
+   "spring rain\nthe cat watches it\nfrom inside my box",
+   "cherry petals\na cat swats one\nmisses, swats me",
+   "warm doorstep\nthe cat and the snowdrops\nboth wake up",
+   "nest in the hedge —\nthe cat pretends\nnot to look"
+  ],
+  "summer": [
+   "midday heat\nthe cat pours itself\ninto the shade",
+   "cicadas\nthe cat's tail\ntwitching in time",
+   "short night\na cat on the fence\ncounting fireflies",
+   "sun patch on the floor\nI nap like a cat\nand snore like a dog"
+  ],
+  "autumn": [
+   "falling leaves\nthe cat attacks\nthe loudest one",
+   "fog morning\ntwo green eyes\nunder the porch",
+   "harvest moon\na cat on the roof\nwatching it rise",
+   "cold nose —\nthe cat lets me share\nthe radiator"
+  ],
+  "winter": [
+   "first snow\nthe cat lifts each paw\nlike a question",
+   "long night\nthe cat's purr\nfills the whole room",
+   "frost on the glass\na cat and I\nbreathe two clouds",
+   "I made a snowball\nfor the cat —\nthe cat left"
+  ]
+ },
+ "Dog": {
+  "spring": [
+   "spring mud\nthe dog comes home\nwearing most of it",
+   "plum blossom —\nthe old dog sniffs\neach one twice",
+   "puddles everywhere\na dog's paw prints\nfilling with sky",
+   "swallows return\nthe dog barks once\nto say hello"
+  ],
+  "summer": [
+   "dog days —\neven my shadow\nis panting",
+   "thunder\nthe big dog hides\nbehind me",
+   "long evening\na stick thrown\ninto the sunset",
+   "garden sprinkler\nthe dog bites the water\nand wins"
+  ],
+  "autumn": [
+   "leaf pile\nthe dog jumps in\nand doesn't come out",
+   "morning fog\na bark\nwith no dog yet",
+   "harvest moon\nthe farm dog\nhowls it higher",
+   "wind in the chimney\nthe dog and I\nboth lift an ear"
+  ],
+  "winter": [
+   "fresh snow\nthe dog writes\nits name everywhere",
+   "deep snowdrift —\nonly a tail\nwagging",
+   "long night\nthe sled dogs dream\nwith running feet",
+   "frozen breath\na dog's warm side\nis my whole world"
+  ]
+ },
+ "Elephant": {
+  "spring": [
+   "first rains\nelephants lift their trunks\nto drink the sky",
+   "blossoms on the path\nthe elephant steps\naround each one",
+   "a new calf\ntrips on its trunk\nlike I trip on my feet",
+   "spring river\nan elephant's spray\nbecomes a rainbow"
+  ],
+  "summer": [
+   "dry season heat\nan elephant's ear\nfans the whole valley",
+   "mud bath —\nI tried it too\nnow I am an elephant",
+   "long dusk\nthe herd walks\ninto the orange dust",
+   "waterhole at noon\nelephant footprints\nfull of tiny frogs"
+  ],
+  "autumn": [
+   "the rains move on\nan elephant's footprint\nholds a small moon",
+   "misty morning\nsomething big\nrumbles from the ground",
+   "ripe marula fruit\nthe elephant\nsways home sleepy",
+   "windy grass\nan elephant's tail\npointing the way"
+  ],
+  "winter": [
+   "cool season\nthe old elephant\nremembers every well",
+   "frost on the savanna\nan elephant's breath\na small cloud",
+   "long night —\nI sleep in the shade\nof one elephant ear",
+   "cold dawn\nthe herd presses close\nI press closer"
+  ]
+ },
+ "Frog": {
+  "spring": [
+   "old pond —\nI jump in too\nsplash, but louder",
+   "spring rain\nevery puddle\nhas its own frog",
+   "frogspawn\na hundred black dots\nlooking at me",
+   "warm night\nthe frogs begin\nthe pond grows wider"
+  ],
+  "summer": [
+   "heat haze\na frog on a lily pad\nholding very still",
+   "after the storm\nthe frogs sing louder\nthan the thunder did",
+   "long evening\nI croak at a frog\nit forgives me",
+   "cool stone\na frog and I\nsharing the shade"
+  ],
+  "autumn": [
+   "falling leaf\nthe frog ducks\na second too late",
+   "fog on the pond\none frog\ncalls the season down",
+   "harvest moon\nin the ditch\na frog sits inside it",
+   "cold rain\nthe frog's song\nshorter every night"
+  ],
+  "winter": [
+   "frozen pond\nunder the ice\na frog dreams of flies",
+   "first snow\nno frogs tonight —\nI croak alone",
+   "long night\nthe mud keeps\na frog warm",
+   "frost on the reeds\nwhere the frog sat\na small round melt"
+  ]
+ },
+ "Goose": {
+  "spring": [
+   "geese return\nthe whole sky\npointing north",
+   "thaw on the river\ngeese ride down\non the ice",
+   "goslings\nin a crooked line —\nI join the end",
+   "spring rain\na goose shakes off\none silver drop at a time"
+  ],
+  "summer": [
+   "hot pond\nthe goose dips its neck\nall the way in",
+   "long evening\ngeese still talking\nlong after dark",
+   "summer storm\nthe gander spreads his wings\nover everyone",
+   "a goose hissed at me\nI hissed back\nwe both left"
+  ],
+  "autumn": [
+   "geese leaving —\nthe V\nwobbles, then holds",
+   "fog over the field\nonly the honking\nflies south",
+   "harvest moon\none goose crosses it\nthen another",
+   "falling leaves\nI flap my arms\nnobody follows"
+  ],
+  "winter": [
+   "empty sky\nsomewhere south\nmy geese are warm",
+   "frozen lake\na goose on one leg\nthen the other",
+   "long night\na goose feather\nin my pillow dreams",
+   "first snow\nthe last goose\nstill deciding"
+  ]
+ },
+ "Hedgehog": {
+  "spring": [
+   "spring dusk\na hedgehog sniffs out\nthe first slug",
+   "blossom petals\nstuck on a hedgehog\nlike small flags",
+   "warm rain\nthe hedgehog wakes up\ngrumpy and hungry",
+   "new leaves\nunder the hedge\na small snore"
+  ],
+  "summer": [
+   "short night\na hedgehog's footsteps\nlouder than mine",
+   "hot day\nthe hedgehog naps\nin a ball of shade",
+   "thunder —\nthe hedgehog\nbecomes a chestnut",
+   "long evening\nthe hedgehog snuffles\nthrough the clover"
+  ],
+  "autumn": [
+   "fallen leaves\nthe hedgehog wears\nhalf of them",
+   "misty garden\na trail of tiny prints\nto the woodpile",
+   "chestnut on the path\nI said hello —\nit was a chestnut",
+   "harvest moon\nthe hedgehog eats\nfor two seasons"
+  ],
+  "winter": [
+   "first frost\nunder the leaf pile\na slow heartbeat",
+   "snow on the hedge\nsomewhere inside\na dream of beetles",
+   "long night\nI curl up like a hedgehog\nbut less pointy",
+   "thaw drip\nthe hedgehog turns over\nnot yet"
+  ]
+ },
+ "Iguana": {
+  "spring": [
+   "first warm rock\nthe iguana and I\nclose our eyes",
+   "flowering tree\nan iguana chews\nthe pinkest bloom",
+   "rainy season begins\nthe iguana's crest\nholding raindrops",
+   "I bowed to the iguana\nit nodded back\nthree times"
+  ],
+  "summer": [
+   "noon heat\nthe iguana\nturns a deeper green",
+   "long afternoon\nan iguana on the wall\nnot moving, not moving",
+   "summer storm\nthe iguana dives\nfrom branch to river",
+   "hot sand —\nI dance\nthe iguana doesn't"
+  ],
+  "autumn": [
+   "cooler mornings\nthe iguana waits\nfor the sun to find it",
+   "mango season ends\nthe iguana checks\nthe empty branch again",
+   "harvest moon\nan iguana's eye\nhalf open",
+   "windy palms\nthe iguana holds on\nwith all of its toes"
+  ],
+  "winter": [
+   "cold snap\nthe iguana dozes off\nand slides off the branch",
+   "dry season\nthe iguana and the stone\nthe same color",
+   "long night\nthe iguana dreams\nof warm rocks",
+   "cool dawn\nI lend the iguana\nmy sunbeam"
+  ]
+ },
+ "Jellyfish": {
+  "spring": [
+   "spring tide —\na jellyfish drifts past\nmy wet toes",
+   "april rain\non the harbor... one jellyfish\nopens and closes",
+   "low tide\nI poke a jellyfish\nit pokes back, sort of",
+   "warm current\nthe first jellyfish\ncarries a petal"
+  ],
+  "summer": [
+   "heat haze —\na jellyfish lantern\nunder the pier",
+   "beach towel\nI mistake a jellyfish\nfor a lost jelly bean",
+   "summer night\nthe jellyfish glow\nwhere the stars should be",
+   "thunder far out\nthe jellyfish pulse\nslower, then slower"
+  ],
+  "autumn": [
+   "autumn sea\na jellyfish holds\none red leaf",
+   "fog on the bay —\nonly the jellyfish\nknow where they go",
+   "harvest moon\nfloating face down\na pale jellyfish",
+   "cold wind\nI tuck myself in\nlike a jellyfish"
+  ],
+  "winter": [
+   "winter harbor\na jellyfish sleeps\nbelow the thin ice",
+   "short day —\nthe jellyfish and I\nboth see-through",
+   "snow falling\ninto the dark sea\nwhere jellyfish wait",
+   "my breath\nfogs the aquarium glass —\nthe jellyfish vanishes"
+  ]
+ },
+ "Koala": {
+  "spring": [
+   "eucalyptus buds —\na koala chews\nwith its eyes closed",
+   "spring rain\nthe koala does not\nmove one bit",
+   "new leaves\nI climb halfway up\nand nap like a koala",
+   "warm morning\na baby koala peeks\nfrom the pouch"
+  ],
+  "summer": [
+   "heat wave\na koala hugs\nthe coolest tree",
+   "cicadas —\nthe koala sleeps\nthrough all of it",
+   "long evening\na koala's ear\nturned toward the creek",
+   "too hot\nI hug a lamppost\nkoala-style"
+  ],
+  "autumn": [
+   "autumn gum tree\nthe koala shifts\nto the sunny side",
+   "mist in the valley\nonly a koala's nose\nabove it",
+   "falling bark\nthe koala grumbles\nand keeps chewing",
+   "harvest moon\na koala's round shape\nin the fork of a branch"
+  ],
+  "winter": [
+   "cold night\nthe koala curls\ninto its own fur",
+   "frost on the leaves\na koala chews\nslower than ever",
+   "winter rain\nI share a branch\nwith a damp koala",
+   "short day —\nthe koala wakes\njust to sleep again"
+  ]
+ },
+ "Llama": {
+  "spring": [
+   "thaw in the hills\na llama's breath\nsmells of new grass",
+   "spring wind\nthe llama's ears\nturn first",
+   "wildflowers —\nthe llama eats\nthe one I picked",
+   "mountain rain\nllamas stand still\nin a wet row"
+  ],
+  "summer": [
+   "summer pasture\na llama hums\nat nothing in particular",
+   "heat —\nthe llama's shadow\nis my umbrella",
+   "freshly sheared\nthe llama looks\nsurprised all day",
+   "thunder in the pass\nthe llamas pull\ninto a circle"
+  ],
+  "autumn": [
+   "first frost\nthe llama's wool\nfull of seeds",
+   "fog on the trail —\na llama's long neck\nappears before the rest",
+   "dry leaves\na llama steps around\nmy small pile",
+   "harvest moon\nI ask the llama\nfor directions"
+  ],
+  "winter": [
+   "snow on the ridge\na llama's eyelashes\nwhite at the tips",
+   "long night\nthe llama folds\nits legs beneath it",
+   "winter morning\nsteam from the llama\nsteam from me",
+   "icy path —\nI follow the llama's\nsure feet"
+  ]
+ },
+ "Moth": {
+  "spring": [
+   "spring dusk\na moth wakes up\non the window frame",
+   "plum blossom\nthe moth's wings\nthe same pale dust",
+   "first warm night\na moth and I\nboth find the porch light",
+   "rain on the screen\na moth waits\nupside down"
+  ],
+  "summer": [
+   "summer night\nmoths circle the lamp —\nI circle too",
+   "heat lightning\na moth lands\non my nose",
+   "long evening\nthe moth reads\nthe lit page with its feet",
+   "cicadas fade\nthe night shift\nof moths begins"
+  ],
+  "autumn": [
+   "autumn wind\na moth tucked\nin a curled leaf",
+   "harvest moon\nthe moth flies straight up\nand gives up",
+   "mist on the field\nthe moth's grey wings\nmade of it",
+   "old sweater\na moth hole\nshaped like a star"
+  ],
+  "winter": [
+   "winter window\na moth asleep\nbehind the curtain",
+   "snowflakes —\nfor a moment I think\nthey are moths",
+   "long night\none moth\nand one candle",
+   "frost on the glass\na moth's dusty print\nfrom summer"
+  ]
+ },
+ "Narwhal": {
+  "spring": [
+   "ice breaking up\na narwhal's tusk\npokes through",
+   "spring light\nall night long —\nnarwhals don't sleep either",
+   "melt water\nthe narwhal points\nthe way north",
+   "first open sea\na pod of narwhals\nbreathing out loud"
+  ],
+  "summer": [
+   "midnight sun\na narwhal's back\nshining like wet stone",
+   "calm arctic sea\nthe narwhal's tusk\nstirs the clouds",
+   "summer swim\nI try a tusk\nmade from a carrot",
+   "long day\nthe narwhals sing\nunder my feet"
+  ],
+  "autumn": [
+   "autumn dusk\nthe narwhals turn\ntoward deeper water",
+   "sea fog —\nonly the tusk\nand then nothing",
+   "first dark night\nthe narwhal's spiral\ncounts the stars",
+   "cold wind\nI point my nose\nlike a narwhal"
+  ],
+  "winter": [
+   "polar night\nthe narwhal finds\na crack of air",
+   "under the ice\na narwhal hums\nthe whole winter",
+   "northern lights —\na narwhal's tusk\ngreen at the tip",
+   "snow on the floe\nI leave tracks\nthe narwhal can't"
+  ]
+ },
+ "Owl": {
+  "spring": [
+   "spring night\nan owl's question\nanswered by frogs",
+   "nesting season\nthe owl's eyes\nin a hollow birch",
+   "thaw —\nowl pellets\nin the soft mud",
+   "april moon\nI hoot once\nthe owl looks away"
+  ],
+  "summer": [
+   "short summer night\nthe owl starts work\nlate",
+   "heat lingering\nthe owl turns its head\nall the way around",
+   "after the storm\na wet owl\nshakes like a broom",
+   "dusk in the barn\nthe owl and I\nboth very still"
+  ],
+  "autumn": [
+   "autumn moon\nthe owl's call\ncloser this time",
+   "falling leaves —\none of them\nis an owl",
+   "fog at dawn\nan owl's white face\nin the white",
+   "autumn wind\nI turn my head like the owl\nand fall over"
+  ],
+  "winter": [
+   "snowy owl\nhard to see\non the snow",
+   "long night\nthe owl counts\nsomething I can't hear",
+   "frost on the fence\nan owl's footprints\nlead nowhere",
+   "winter stars\nthe owl's eyes\ntwo more"
+  ]
+ },
+ "Pigeon": {
+  "spring": [
+   "spring rain\na pigeon shakes off\non the bus stop roof",
+   "cherry petals\non the sidewalk —\na pigeon pecks one",
+   "warm bench\na pigeon and I\nsplit a crumb",
+   "spring puddle\nthe pigeon walks through\ntwice"
+  ],
+  "summer": [
+   "heat on the square\npigeons bathe\nin the fountain",
+   "summer evening\na pigeon nods\nat every step",
+   "ice cream cone\nthe pigeon sees it\nbefore I do",
+   "thunder\nall the pigeons\nlift at once"
+  ],
+  "autumn": [
+   "autumn leaves\na pigeon kicks\nthrough the gutter",
+   "foggy station\na pigeon waits\nfor no train",
+   "chestnuts roasting —\nthe pigeons gather\njust in case",
+   "windy corner\na pigeon walks\nbackward a little"
+  ],
+  "winter": [
+   "first snow\na pigeon's footprints\nacross the bench",
+   "cold morning\npigeons puffed up\nlike bread rolls",
+   "steam from a vent\nthree pigeons\nsharing it",
+   "short day\nthe pigeon and I\nhead home early"
+  ]
+ },
+ "Quokka": {
+  "spring": [
+   "spring grass\na quokka smiles\nwith its mouth full",
+   "rain shower\nthe quokka hops\ninto my shadow",
+   "new leaves\na quokka climbs\nhalf a shrub",
+   "spring sun\nI smile back at the quokka\nfor too long"
+  ],
+  "summer": [
+   "hot sand\na quokka naps\nunder the bush",
+   "salt wind\nthe quokka's ears\ncatch it first",
+   "summer picnic\nthe quokka inspects\nmy sandwich",
+   "long evening\nquokkas come out\none by one"
+  ],
+  "autumn": [
+   "autumn island\na quokka's footprints\nin the dew",
+   "fallen seeds\nthe quokka chews\nand thinks",
+   "harvest moon\na quokka sitting up\nto look",
+   "autumn drizzle\nthe quokka still smiling\nme less so"
+  ],
+  "winter": [
+   "winter rain\na quokka curled\nin the hollow",
+   "cold dawn\nthe quokka's breath\nand mine",
+   "short day\nthe quokka grazes\nfaster",
+   "grey winter sea\none brown quokka\nholding the island down"
+  ]
+ },
+ "Rabbit": {
+  "spring": [
+   "spring meadow\na rabbit's ears\nabove the clover",
+   "thaw —\nrabbit tracks\nturn into mud tracks",
+   "dandelions\nthe rabbit and I\neat the same one",
+   "warm rain\na rabbit sits\nperfectly round"
+  ],
+  "summer": [
+   "summer dusk\nthe rabbits come out\nto the lawn edge",
+   "heat —\na rabbit stretched flat\nin the shade",
+   "storm coming\nthe rabbit's nose\ngoes faster",
+   "I try to hop\nlike the rabbit —\nsummer grass in my mouth"
+  ],
+  "autumn": [
+   "harvest moon\nI look for the rabbit\nin it",
+   "fallen apples\na rabbit nibbles\nthe sweet side",
+   "morning fog\na white tail\nthen only fog",
+   "dry leaves\nthe rabbit freezes\nso do I"
+  ],
+  "winter": [
+   "fresh snow\nrabbit tracks\nlike little exclamation marks",
+   "frosty garden\na rabbit's breath\nby the cabbage stalk",
+   "long night\nthe rabbit dreams\nof clover, probably",
+   "white field\nthe rabbit's ears\ngive it away"
+  ]
+ },
+ "Snail": {
+  "spring": [
+   "after the thaw\na snail and I\nshare one wet stone",
+   "plum petals\nthe snail wears one\nall the way home",
+   "spring rain —\ni follow a snail's\nsilver road",
+   "racing the snail\nto the first dandelion\nwe both lose"
+  ],
+  "summer": [
+   "midday heat\nthe snail sealed shut\nso am I",
+   "thunder far off\na snail lifts both horns\nto listen",
+   "long evening —\nthe snail halfway\nup the flowerpot",
+   "I lick the dew\noff a lettuce leaf —\nthe snail looks hurt"
+  ],
+  "autumn": [
+   "fallen leaves\na snail climbs\nthe tallest one",
+   "morning fog\nonly the snail\nknows the way",
+   "harvest moon\nthe snail's shell holds\na little of it",
+   "I knock on the shell\nno one home…\nautumn wind"
+  ],
+  "winter": [
+   "first frost\nthe snail's door\nsealed with white",
+   "snow on the wall\nsomewhere inside\na snail sleeps",
+   "long night\ni curl up\nlike a snail",
+   "my breath\nfogs the snail shell —\nsorry, sorry"
+  ]
+ },
+ "Turtle": {
+  "spring": [
+   "warm stone\na turtle opens\none eye",
+   "spring river\nthe turtle carries\na petal on its back",
+   "first rain\nthe turtle and I\nstick our heads out",
+   "I sit on a turtle\nit takes me\nnowhere at all"
+  ],
+  "summer": [
+   "noon heat\nthe turtle wears\nthe pond",
+   "sand still warm\nlittle turtles\nfollow the moon",
+   "cicadas\na turtle naps\non a turtle",
+   "too hot —\ni try to hide\ninside my own back"
+  ],
+  "autumn": [
+   "pond mist\nthe turtle's head\na small island",
+   "maple leaves\nslide off the shell\none by one",
+   "geese leaving\nthe turtle stays\nand stays",
+   "harvest moon\nthe turtle and I\nboth very round"
+  ],
+  "winter": [
+   "ice on the pond\nunder it\na turtle dreams",
+   "cold mud\nthe turtle's heart\nalmost still",
+   "snowfall\nthe turtle's shell\nwears a hat",
+   "long night —\nhow many winters\nin that shell"
+  ]
+ },
+ "Urchin": {
+  "spring": [
+   "spring tide\nan urchin rolls\none step closer",
+   "rock pool\nthe urchin and I\nwatch a crab",
+   "warm shallows\nan urchin wears\na snail shell",
+   "I pet the urchin\nit pets me back —\nouch"
+  ],
+  "summer": [
+   "low tide\na purple urchin\nkeeps its spines wet",
+   "summer sea\nthe urchin chews\nkelp all day",
+   "fireworks —\nan urchin\nwould understand",
+   "barefoot on the rocks\ni say hello\nvery carefully"
+  ],
+  "autumn": [
+   "storm swell\nthe urchin holds on\nwith a hundred feet",
+   "autumn moon\nin the tide pool\na round urchin",
+   "cold current\nthe kelp thins\nthe urchin waits",
+   "chestnut burr —\nfor a moment\ni say hello to it"
+  ],
+  "winter": [
+   "winter sea\nan urchin\nin a bowl of foam",
+   "long night\nthe urchin's spines\npoint at every star",
+   "frost on the jetty\nbelow the water\na small sun",
+   "I try to hug\nthe urchin\nfor warmth"
+  ]
+ },
+ "Vole": {
+  "spring": [
+   "melting snow\na vole's tunnel\nopens to the sky",
+   "clover\na vole and I\nsplit one leaf",
+   "spring rain\nthe vole's nose\nin a dewdrop",
+   "I follow the vole\ninto its hole\nmost of me fits"
+  ],
+  "summer": [
+   "tall grass\nsomewhere a vole\nmoves the whole meadow",
+   "heat haze\na vole sits up\nto count clouds",
+   "after the storm\na vole shakes out\nits small coat",
+   "I nibble a seed\nthe vole nibbles me\nwe are even"
+  ],
+  "autumn": [
+   "stubble field\na vole carries\none whole grain",
+   "first frost on the grass\nthe vole's pantry\nfull to the door",
+   "owl overhead\nthe vole and I\nare leaves",
+   "harvest moon\nthe vole thinks\nit's cheese"
+  ],
+  "winter": [
+   "under the snow\na vole's road\ngoes everywhere",
+   "white field\nthe smallest footprints\nare the vole's",
+   "long night\nthe vole's nest\nwarm with grass",
+   "deep snow\nonly my ears show —\nthe vole waves"
+  ]
+ },
+ "Whale": {
+  "spring": [
+   "spring sea\na whale's back\nlike a new island",
+   "thawing coast\nthe whales\ngoing north again",
+   "plankton bloom\nthe whale opens\nits huge mouth",
+   "I wave at the whale\nthe whale\nwaves the ocean"
+  ],
+  "summer": [
+   "long evening\na whale's spout\nturns pink",
+   "summer stars\na whale breathes\nfar out",
+   "heat on the pier\nsomewhere below\na whale sings",
+   "my belly\nand the whale's belly —\nboth rumble"
+  ],
+  "autumn": [
+   "autumn wind\nthe whale's tail\nwaves goodbye",
+   "harvest moon\na whale rises\nright through it",
+   "sea fog\nonly the whale's breath\nmoves",
+   "I try to sing\nlike the whale —\na pigeon answers"
+  ],
+  "winter": [
+   "grey sea\nthe whales\ngoing south",
+   "long night\na whale song\ndeeper than the cold",
+   "ice floes\na whale's back\nsmooth as snow",
+   "frost on my nose\nthe whale\ndoesn't even notice"
+  ]
+ },
+ "Xerus": {
+  "spring": [
+   "first rains\na xerus stands up\nto smell them",
+   "new grass\nthe xerus nibbles\na green tip",
+   "warm dawn\nfour xerus\nat one hole",
+   "I try the tail umbrella\nmy tail\nis too short"
+  ],
+  "summer": [
+   "noon sun\nthe xerus\nunder its own tail",
+   "heat shimmer\na xerus\nflickers in and out",
+   "thunderheads\nthe xerus dives\ninto the ground",
+   "dust bath\nthe xerus and I\nsneeze together"
+  ],
+  "autumn": [
+   "dry grass\na xerus\nthe same color",
+   "harvest moon\nover the savanna\none xerus awake",
+   "seeds falling\nthe xerus\nfills both cheeks",
+   "I dig a burrow\nlike the xerus —\nit's just a dent"
+  ],
+  "winter": [
+   "cold dawn\nthe xerus waits\nfor the sun",
+   "long night\nthe xerus family\nin one heap",
+   "frost on the acacia\na xerus\nfluffs its tail",
+   "my breath, its breath\ntwo small clouds\nnose to nose"
+  ]
+ },
+ "Yak": {
+  "spring": [
+   "mountain thaw\na yak calf\non wobbly legs",
+   "prayer flags snapping\nthe yak\nchews and chews",
+   "spring snowmelt\nthe yak's beard\ndripping",
+   "I ride the yak\nfor three steps —\nnow I ride the grass"
+  ],
+  "summer": [
+   "high meadow\nthe yak sheds\nits winter coat",
+   "summer storm\nyaks standing\nlike hills",
+   "long evening\nthe yak's shadow\ncrosses the valley",
+   "yak fluff\ni wear it\nas a cloud"
+  ],
+  "autumn": [
+   "first snow on the peaks\nthe yaks\ncome down",
+   "geese overhead\nthe yak\ndoes not look up",
+   "harvest moon\non the long horns\na little light",
+   "autumn wind\ni hide\nin the yak's long hair"
+  ],
+  "winter": [
+   "blizzard\nthe yak\nfaces into it",
+   "frozen beard\nthe yak's breath\na small cloud",
+   "long night\nunder the yak\nwarm enough",
+   "snow on the yak\nsnow on me —\nwho is the yak now"
+  ]
+ },
+ "Zebra": {
+  "spring": [
+   "first rains\nzebra foals\nall legs",
+   "new grass\nthe zebras' stripes\nbrighter",
+   "river crossing\na zebra shakes\nthe water off",
+   "I count the stripes\nlose count\nstart again"
+  ],
+  "summer": [
+   "noon heat\nzebras rest\nhead to tail",
+   "heat haze\nthe herd becomes\none striped cloud",
+   "dry thunder\nthe zebra's ears\nturn",
+   "I paint stripes on\nwith mud —\nnobody is fooled"
+  ],
+  "autumn": [
+   "dry season\nthe zebras walk\ntoward the rain",
+   "dusty wind\na zebra\nblinks it away",
+   "harvest moon\nzebra stripes\nmoonlight stripes",
+   "a zebra yawns\ni yawn\nthe whole herd yawns"
+  ],
+  "winter": [
+   "cold night\nzebras pressed\nside by side",
+   "frost on the savanna\na zebra's breath\ngoes white",
+   "long night\nthe stripes\nunder the stars",
+   "black and white\nlike snow on rock —\nbut warm"
+  ]
+ }
+}

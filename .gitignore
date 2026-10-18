@@ -1,0 +1,10 @@
+# Editor settings are personal
+.vscode/
+
+# OS clutter
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Python (tools/serve.py)
+__pycache__/
